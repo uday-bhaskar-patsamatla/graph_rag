@@ -7,7 +7,6 @@ import chromadb
 from langchain_chroma import Chroma
 from langchain.docstore.document import Document
 from langchain_openai import OpenAIEmbeddings
-from chunks import chunks
 
 # --- Configuration ---
 # Load environment variables from a .env file
@@ -120,24 +119,24 @@ def retrieve_from_chroma(
         print(f"An error occurred during retrieval from Chroma DB: {e}")
         return None
 
-if __name__ == "__main__":
-    # --- Example Usage ---
+# if __name__ == "__main__":
+#     # --- Example Usage ---
     
-    # Simulate document chunks with metadata (e.g., a unique ID)
-    documents = chunks
-    chunks = [Document(page_content=doc, metadata={"doc_id": f"doc-{i+1}"}) for i, doc in enumerate(documents)]
+#     # Simulate document chunks with metadata (e.g., a unique ID)
+#     documents = chunks
+#     chunks = [Document(page_content=doc, metadata={"doc_id": f"doc-{i+1}"}) for i, doc in enumerate(documents)]
 
-    # 1. Insert chunks into Chroma DB
-    chroma_db_instance = insert_chunks_to_chroma(chunks)
+#     # 1. Insert chunks into Chroma DB
+#     chroma_db_instance = insert_chunks_to_chroma(chunks)
 
-    if chroma_db_instance:
-        # 2. Retrieve relevant chunks for a query
-        user_query = "Who is the founder of Apple?"
-        retrieved_docs = retrieve_from_chroma(user_query, k=2)
+#     if chroma_db_instance:
+#         # 2. Retrieve relevant chunks for a query
+#         user_query = "Who is the founder of Apple?"
+#         retrieved_docs = retrieve_from_chroma(user_query, k=2)
 
-        if retrieved_docs:
-            print("\n--- Retrieved Documents from Chroma ---")
-            for i, doc in enumerate(retrieved_docs):
-                print(f"Rank {i+1}: ID={doc.metadata.get('doc_id')}\nContent: {doc.page_content}\n")
-    else:
-        print("Chroma DB insertion failed, cannot proceed with retrieval.")
+#         if retrieved_docs:
+#             print("\n--- Retrieved Documents from Chroma ---")
+#             for i, doc in enumerate(retrieved_docs):
+#                 print(f"Rank {i+1}: ID={doc.metadata.get('doc_id')}\nContent: {doc.page_content}\n")
+#     else:
+#         print("Chroma DB insertion failed, cannot proceed with retrieval.")

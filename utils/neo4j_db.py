@@ -5,7 +5,7 @@ from typing import List, Dict, Any, Optional
 from dotenv import load_dotenv
 from openai import OpenAI
 from langchain_neo4j import Neo4jGraph # Updated import as per the deprecation warning
-
+from chunks import chunks as document_chunks
 # --- Configuration ---
 # Load environment variables from a .env file
 load_dotenv()
@@ -203,33 +203,29 @@ class Neo4jWorkflow:
             print(f"No context found for entities: {query_entity_names}")
             return None
         
+        print("\n".join(context_list))
         return "\n".join(context_list)
 
-if __name__ == "__main__":
-    # --- Example Usage ---
+# if __name__ == "__main__":
+#     # --- Example Usage ---
     
-    # Instantiate the Neo4j workflow manager
-    workflow = Neo4jWorkflow(NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, OPENAI_API_KEY)
+#     # Instantiate the Neo4j workflow manager
+#     workflow = Neo4jWorkflow(NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, OPENAI_API_KEY)
     
-    # Sample sentences to build the knowledge base from
-    sample_sentences = [
-        "Apple Inc. was founded by Steve Jobs and Steve Wozniak.",
-        "Tim Cook is the current CEO of Apple Inc., a technology company.",
-        "The iPhone, a popular smartphone, was developed by Apple.",
-        "Steve Jobs was also a co-founder of Pixar Animation Studios."
-    ]
+#     # Sample sentences to build the knowledge base from
+#     sample_sentences = document_chunks
 
-    try:
-        # 1. Create the knowledge base
-        # workflow.create_knowledge_base(sample_sentences)
+#     try:
+#         # 1. Create the knowledge base
+#         workflow.create_knowledge_base(sample_sentences)
         
-        # 2. Retrieve information from the knowledge base
-        user_query = "Who founded Apple and what is its current CEO?"
-        graph_context = workflow.retrieve_from_knowledge_base(user_query)
+#         # # 2. Retrieve information from the knowledge base
+#         # user_query = "Who founded Apple and what is its current CEO?"
+#         # graph_context = workflow.retrieve_from_knowledge_base(user_query)
         
-        if graph_context:
-            print("\n--- Retrieved Context from Neo4j ---")
-            print(graph_context)
+#         # if graph_context:
+#         #     print("\n--- Retrieved Context from Neo4j ---")
+#         #     print(graph_context)
     
-    except Exception as e:
-        print(f"An error occurred: {e}")
+#     except Exception as e:
+#         print(f"An error occurred: {e}")
