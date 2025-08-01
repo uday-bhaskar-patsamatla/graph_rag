@@ -8,7 +8,6 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_neo4j import Neo4jGraph
 # from chromadb import Client, Settings
 from pydantic import BaseModel, Field 
-import chromadb
 from dotenv import load_dotenv
 
 load_dotenv()
