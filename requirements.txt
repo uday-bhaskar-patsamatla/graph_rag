@@ -4,3 +4,4 @@ langchain
 langchain_community
 chromadb[server]
 langchain_neo4j
+langchain_chroma
