@@ -4,8 +4,9 @@ import json
 from typing import List, Dict, Any, Optional
 from dotenv import load_dotenv
 from openai import OpenAI
-from langchain_neo4j import Neo4jGraph # Updated import as per the deprecation warning
+from langchain_neo4j import Neo4jGraph
 from chunks import chunks as document_chunks
+
 # --- Configuration ---
 # Load environment variables from a .env file
 load_dotenv()
@@ -16,7 +17,7 @@ NEO4J_USER = os.getenv("NEO4J_USERNAME")
 NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-if not all([NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD]):
+if not all([NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, OPENAI_API_KEY]):
     raise ValueError("Neo4j cloud connection details (NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD) not found in environment variables.")
 
 if not OPENAI_API_KEY:
@@ -152,9 +153,10 @@ class Neo4jWorkflow:
 
             for data in extracted_data:
                 # Dynamically construct a Cypher query using MERGE
+                # Now using backticks around labels to handle spaces correctly.
                 cypher_query = f"""
-                MERGE (e1:{data['entity1_label']} {{name: $entity1_name}})
-                MERGE (e2:{data['entity2_label']} {{name: $entity2_name}})
+                MERGE (e1:`{data['entity1_label']}` {{name: $entity1_name}})
+                MERGE (e2:`{data['entity2_label']}` {{name: $entity2_name}})
                 MERGE (e1)-[:`{data['relationship']}`]->(e2)
                 """
                 self.neo4j_graph.query(
@@ -203,7 +205,6 @@ class Neo4jWorkflow:
             print(f"No context found for entities: {query_entity_names}")
             return None
         
-        print("\n".join(context_list))
         return "\n".join(context_list)
 
 # if __name__ == "__main__":
@@ -219,13 +220,13 @@ class Neo4jWorkflow:
 #         # 1. Create the knowledge base
 #         workflow.create_knowledge_base(sample_sentences)
         
-#         # # 2. Retrieve information from the knowledge base
-#         # user_query = "Who founded Apple and what is its current CEO?"
-#         # graph_context = workflow.retrieve_from_knowledge_base(user_query)
+#         # 2. Retrieve information from the knowledge base
+#         user_query = "Who founded Apple and what is its current CEO?"
+#         graph_context = workflow.retrieve_from_knowledge_base(user_query)
         
-#         # if graph_context:
-#         #     print("\n--- Retrieved Context from Neo4j ---")
-#         #     print(graph_context)
+#         if graph_context:
+#             print("\n--- Retrieved Context from Neo4j ---")
+#             print(graph_context)
     
 #     except Exception as e:
 #         print(f"An error occurred: {e}")
